@@ -6,7 +6,7 @@ A [wazero](https://pkg.go.dev/github.com/tetratelabs/wazero) host module, ABI an
 
 [![Go Reference](https://godoc.org/github.com/pantopic/ext-global/host-wazero?status.svg)](https://godoc.org/github.com/pantopic/ext-global/host-wazero)
 [![Go Report Card](https://goreportcard.com/badge/github.com/pantopic/ext-global/host-wazero)](https://goreportcard.com/report/github.com/pantopic/ext-global/host-wazero)
-[![Go Coverage](https://github.com/pantopic/wazero-global/wiki/host/coverage.svg)](https://raw.githack.com/wiki/pantopic/ext-global/host-wazero/coverage.html)
+[![Go Coverage](https://github.com/pantopic/ext-global/wiki/host-wazero/coverage.svg)](https://raw.githack.com/wiki/pantopic/ext-global/host-wazero/coverage.html)
 
 First register the host module with the runtime
 
@@ -32,8 +32,8 @@ func main() {
 
 ## Guest SDK (Go)
 
-[![Go Reference](https://godoc.org/github.com/pantopic/wazero-global/sdk-go?status.svg)](https://godoc.org/github.com/pantopic/wazero-global/sdk-go)
-[![Go Report Card](https://goreportcard.com/badge/github.com/pantopic/wazero-global/sdk-go)](https://goreportcard.com/report/github.com/pantopic/wazero-global/sdk-go)
+[![Go Reference](https://godoc.org/github.com/pantopic/ext-global/sdk-go?status.svg)](https://godoc.org/github.com/pantopic/ext-global/sdk-go)
+[![Go Report Card](https://goreportcard.com/badge/github.com/pantopic/ext-global/sdk-go)](https://goreportcard.com/report/github.com/pantopic/ext-global/sdk-go)
 
 Then you can import the guest SDK into your WASI module to retrieve globals from the host.
 
@@ -41,7 +41,7 @@ Then you can import the guest SDK into your WASI module to retrieve globals from
 package main
 
 import (
-    "github.com/pantopic/wazero-global/sdk-go"
+    "github.com/pantopic/ext-global/sdk-go"
 )
 
 var (
