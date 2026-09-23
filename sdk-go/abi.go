@@ -25,7 +25,7 @@ func __global() (res uint32) {
 	return uint32(uintptr(unsafe.Pointer(&meta[0])))
 }
 
-//go:wasm-module pantopic/wazero-global
+//go:wasm-module pantopic/ext-global
 //export __global_get
 func get()
 

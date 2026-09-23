@@ -1,4 +1,4 @@
-module github.com/pantopic/wazero-global/host
+module github.com/pantopic/ext-global/host-wazero
 
 go 1.25.5
 

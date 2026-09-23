@@ -1,9 +1,3 @@
-//! Guest SDK (Zig) for the pantopic/wazero-global host module.
-//!
-//! Implements the same ABI as sdk-go: the host calls `__global` once to learn
-//! the addresses of the value, name buffer and name length/capacity, then each
-//! call to `__global_get` lets the host overwrite the value in place.
-
 const std = @import("std");
 
 var val: u64 = 0;
@@ -12,7 +6,7 @@ var name_len: u32 = 0;
 var name: [64]u8 = undefined;
 var meta: [4]u32 = undefined;
 
-extern "pantopic/wazero-global" fn __global_get() void;
+extern "pantopic/ext-global" fn __global_get() void;
 
 export fn __global() u32 {
     meta[0] = @intFromPtr(&val);
@@ -48,7 +42,6 @@ pub const Uint64 = struct {
     }
 };
 
-/// Duration in nanoseconds, matching Go's time.Duration representation.
 pub const Duration = struct {
     name: []const u8,
     default: i64,

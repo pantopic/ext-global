@@ -3,7 +3,7 @@ package main
 import (
 	"time"
 
-	"github.com/pantopic/wazero-global/sdk-go"
+	"github.com/pantopic/ext-global/sdk-go"
 )
 
 var (

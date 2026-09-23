@@ -1,12 +1,12 @@
-# Wazero Global
+# Global
 
 A [wazero](https://pkg.go.dev/github.com/tetratelabs/wazero) host module, ABI and guest SDK providing globals for WASI modules.
 
 ## Host Module
 
-[![Go Reference](https://godoc.org/github.com/pantopic/wazero-global/host?status.svg)](https://godoc.org/github.com/pantopic/wazero-global/host)
-[![Go Report Card](https://goreportcard.com/badge/github.com/pantopic/wazero-global/host)](https://goreportcard.com/report/github.com/pantopic/wazero-global/host)
-[![Go Coverage](https://github.com/pantopic/wazero-global/wiki/host/coverage.svg)](https://raw.githack.com/wiki/pantopic/wazero-global/host/coverage.html)
+[![Go Reference](https://godoc.org/github.com/pantopic/ext-global/host-wazero?status.svg)](https://godoc.org/github.com/pantopic/ext-global/host-wazero)
+[![Go Report Card](https://goreportcard.com/badge/github.com/pantopic/ext-global/host-wazero)](https://goreportcard.com/report/github.com/pantopic/ext-global/host-wazero)
+[![Go Coverage](https://github.com/pantopic/wazero-global/wiki/host/coverage.svg)](https://raw.githack.com/wiki/pantopic/ext-global/host-wazero/coverage.html)
 
 First register the host module with the runtime
 
@@ -15,7 +15,7 @@ import (
     "github.com/tetratelabs/wazero"
     "github.com/tetratelabs/wazero/imports/wasi_snapshot_preview1"
 
-    "github.com/pantopic/wazero-global/host"
+    "github.com/pantopic/ext-global/host-wazero"
 )
 
 func main() {
