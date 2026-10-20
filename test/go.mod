@@ -1,4 +1,4 @@
-module github.com/pantopic/wazero-global/test
+module github.com/pantopic/ext-global/test
 
 go 1.25.5
 
