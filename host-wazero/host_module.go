@@ -9,6 +9,11 @@ import (
 	"github.com/tetratelabs/wazero/api"
 )
 
+type HostModule interface {
+	Set(key string, val uint64)
+	Del(key string)
+}
+
 // Name is the name of this host module.
 const Name = "pantopic/ext-global"
 
@@ -27,7 +32,6 @@ type meta struct {
 type hostModule struct {
 	sync.RWMutex
 
-	module    api.Module
 	mutex     sync.RWMutex
 	overrides map[string]uint64
 }
@@ -67,7 +71,7 @@ func (h *hostModule) Register(ctx context.Context, r wazero.Runtime) (err error)
 		}
 		setVal(m, meta, val)
 	})
-	h.module, err = builder.Instantiate(ctx)
+	_, err = builder.Instantiate(ctx)
 	return
 }
 
