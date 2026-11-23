@@ -3,16 +3,12 @@ package wazero_global
 import (
 	"context"
 	"log"
+	"strconv"
 	"sync"
 
 	"github.com/tetratelabs/wazero"
 	"github.com/tetratelabs/wazero/api"
 )
-
-type HostModule interface {
-	Set(key string, val uint64)
-	Del(key string)
-}
 
 // Name is the name of this host module.
 const Name = "pantopic/ext-global"
@@ -32,15 +28,22 @@ type meta struct {
 type hostModule struct {
 	sync.RWMutex
 
-	mutex     sync.RWMutex
-	overrides map[string]uint64
+	mutex  sync.RWMutex
+	cache  map[string]uint64
+	layers []Lookup
 }
 
-type Option func(*hostModule)
+func (h *hostModule) LayerAdd(fn Lookup) {
+	h.mutex.Lock()
+	h.layers = append(h.layers, fn)
+	h.mutex.Unlock()
+}
+
+var _ HostModule = (*hostModule)(nil)
 
 func New(opts ...Option) *hostModule {
 	p := &hostModule{
-		overrides: make(map[string]uint64),
+		cache: make(map[string]uint64),
 	}
 	for _, opt := range opts {
 		opt(p)
@@ -64,12 +67,29 @@ func (h *hostModule) Register(ctx context.Context, r wazero.Runtime) (err error)
 		meta := get[*meta](ctx, ctxKeyMeta)
 		name := string(getName(m, meta))
 		h.mutex.RLock()
-		val, ok := h.overrides[name]
-		h.mutex.RUnlock()
-		if !ok {
+		defer h.mutex.RUnlock()
+		if val, ok := h.cache[name]; ok {
+			setVal(m, meta, val)
 			return
 		}
-		setVal(m, meta, val)
+		for _, layer := range h.layers {
+			var v uint64
+			if val, ok := layer(name); ok {
+				if val == "true" {
+					v = 1
+				} else {
+					v, err = strconv.ParseUint(val, 10, 64)
+					println("__global_get", val, v)
+					if err != nil {
+						log.Panicf("Failed to parse uint64 from %s: %v", val, err)
+						err = nil
+					}
+				}
+				h.cache[name] = v
+				setVal(m, meta, v)
+				return
+			}
+		}
 	})
 	_, err = builder.Instantiate(ctx)
 	return
@@ -108,13 +128,13 @@ func (h *hostModule) ContextCopy(dst, src context.Context) context.Context {
 
 func (h *hostModule) Set(key string, val uint64) {
 	h.mutex.Lock()
-	h.overrides[key] = val
+	h.cache[key] = val
 	h.mutex.Unlock()
 }
 
 func (h *hostModule) Del(key string) {
 	h.mutex.Lock()
-	delete(h.overrides, key)
+	delete(h.cache, key)
 	h.mutex.Unlock()
 }
 
