@@ -6,7 +6,7 @@ import (
 
 var (
 	val     uint64
-	nameCap uint32 = 64
+	nameCap uint32 = 256
 	nameLen uint32
 	name    = make([]byte, nameCap)
 	meta    = make([]uint32, 4)
@@ -28,6 +28,10 @@ func __global() (res uint32) {
 //go:wasm-module pantopic/ext-global
 //export __global_get
 func get()
+
+//go:wasm-module pantopic/ext-global
+//export __global_get_string
+func getString()
 
 // Fix for lint rule `unusedfunc`
 var _ = __global

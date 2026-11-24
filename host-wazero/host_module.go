@@ -91,6 +91,19 @@ func (h *hostModule) Register(ctx context.Context, r wazero.Runtime) (err error)
 			}
 		}
 	})
+	register("__global_get_string", func(ctx context.Context, m api.Module, stack []uint64) {
+		meta := get[*meta](ctx, ctxKeyMeta)
+		name := string(getName(m, meta))
+		h.mutex.RLock()
+		defer h.mutex.RUnlock()
+		for _, layer := range h.layers {
+			if val, ok := layer(name); ok {
+				setName(m, meta, []byte(val))
+				return
+			}
+			setName(m, meta, nil)
+		}
+	})
 	_, err = builder.Instantiate(ctx)
 	return
 }
@@ -164,6 +177,14 @@ func getVal(m api.Module, meta *meta) uint64 {
 
 func setVal(m api.Module, meta *meta, v uint64) {
 	writeUint64(m, meta.ptrVal, v)
+}
+func setName(m api.Module, meta *meta, val []byte) {
+	buf, ok := m.Memory().Read(meta.ptrName, readUint32(m, meta.ptrNameCap))
+	if !ok {
+		log.Panicf("Memory.Read(%d, %d) out of range", meta.ptrName, meta.ptrNameCap)
+	}
+	copy(buf, val)
+	writeUint32(m, meta.ptrNameLen, uint32(len(val)))
 }
 
 func getName(m api.Module, meta *meta) []byte {

@@ -7,6 +7,7 @@ import (
 type Bool func() bool
 type Uint64 func() uint64
 type Duration func() time.Duration
+type String func() string
 
 func NewBool(n string, v bool) Bool {
 	return func() bool {
@@ -38,5 +39,17 @@ func NewDuration(n string, v time.Duration) Duration {
 		copy(name[:nameLen], []byte(n))
 		get()
 		return time.Duration(int64(val))
+	}
+}
+
+func NewString(n string, v string) String {
+	return func() string {
+		nameLen = uint32(len(n))
+		copy(name[:nameLen], []byte(n))
+		getString()
+		if nameLen == 0 {
+			return v
+		}
+		return string(name[:nameLen])
 	}
 }
